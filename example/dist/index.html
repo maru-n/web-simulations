@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Double Pendulum</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="./app.js" canvas="simCanvas"></script>
+        <style>
+        #wrapper {
+            margin: auto;
+            width: 600px;
+        }
+
+        @media (max-width: 600px) {
+            #wrapper {
+                width: 100%;
+            }
+        }
+
+        #settings {
+            margin: 1em 0;
+        }
+        #simCanvas {
+            border: 1px solid black;
+            width: 100%;
+        }
+        #playPauseBtn {
+            padding: 0.25em 1.4em;
+            position: relative;
+            display: inline-block;
+            font-weight: bold;
+            text-decoration: none;
+            color: #FFF;
+            background: #7F7FFF;
+            transition: .4s;
+        }
+        #playPauseBtn:hover {
+            background: #ABABFF;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="wrapper">
+            <h1>Websim Example</h1>
+            <canvas id="simCanvas"></canvas>
+            <div id="controller">
+                <a ref="#" id="playPauseBtn">
+                    <i class="fa fa-play fa-fw"  id="playIcon"></i>
+                    <i class="fa fa-pause fa-fw" id="pauseIcon" style="display: none"></i>
+                </a>
+            </div>
+        </div>
+    </body>
+</html>
