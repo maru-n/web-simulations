@@ -12,10 +12,18 @@ window.onload = () => {
         var th2 = dp.th2 >  Math.PI ? (dp.th2 + Math.PI) % (Math.PI*2) - Math.PI:
                   dp.th2 < -Math.PI ? (dp.th2 - Math.PI) % (Math.PI*2) + Math.PI:
                   dp.th2;
-        $('#th1>input[type=range]').val(th1 / Math.PI);
-        $('#th2>input[type=range]').val(th2 / Math.PI);
-        $('#th1>input[type=number]').val((th1 / Math.PI).toFixed(3));
-        $('#th2>input[type=number]').val((th2 / Math.PI).toFixed(3));
+        if (!$('#th1>input[type=range]').is(':focus')) {
+            $('#th1>input[type=range]').val((th1 / Math.PI));
+        }
+        if (!$('#th2>input[type=range]').is(':focus')) {
+            $('#th2>input[type=range]').val((th2 / Math.PI));
+        }
+        if (!$('#th1>input[type=number]').is(':focus')) {
+            $('#th1>input[type=number]').val((th1 / Math.PI));
+        }
+        if (!$('#th2>input[type=number]').is(':focus')) {
+            $('#th2>input[type=number]').val((th2 / Math.PI));
+        }
     }
 
     var dp = new DoublePendulum(Math.PI*0.4, Math.PI*0.9, 0, 0);
