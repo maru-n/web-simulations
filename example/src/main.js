@@ -1,7 +1,6 @@
 'use strict';
 
-import FireworksVisualizer from './example_visualizer.js'
-import Fireworks from './example_system.js'
+import {Fireworks, FireworksVisualizer} from './example.js'
 import $ from 'jquery'
 
 window.onload = () => {
