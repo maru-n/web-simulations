@@ -1,5 +1,5 @@
 import DynamicalSystemCanvasVisualizer from './visualizer.js'
-//import DoublePendulum from './double_pendulum.js'
+
 
 export default class DoublePendulumVisualizer extends DynamicalSystemCanvasVisualizer {
     constructor(system, canvas_selector, width=800, height=600) {
