@@ -10,15 +10,15 @@ export default class DynamicalSystem {
 
     run() {
         this.running = true;
-        var that = this;
-        var runner = () => {
-            if (!this.running) {
-                return
-            }
-            that.update();
-            setTimeout(runner, 1);
+        this.runner();
+    }
+
+    runner() {
+        if (!this.running) {
+            return
         }
-        runner();
+        this.update();
+        setTimeout(this.runner.bind(this), 1);
     }
 
     stop() {
