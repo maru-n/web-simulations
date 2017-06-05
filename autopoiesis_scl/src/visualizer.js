@@ -33,21 +33,21 @@ export default class DynamicalSystemCanvasVisualizer {
 
     run_animation() {
         this.running_animation = true;
-        var that = this;
-        var runner = () => {
-            if (!that.running_animation) {
-                return;
-            }
-            this.frame += 1
-            if (this.frame % this.fps_calc_frames == 0) {
-                var now = Date.now();
-                this.fps = parseInt(1000*this.fps_calc_frames/(now - this.fps_last_draw_time));
-                this.fps_last_draw_time = now;
-            }
-            that.draw(this.canvas, this.system);
-            requestAnimationFrame(runner);
+        this.runner();
+    }
+
+    runner() {
+        if (!this.running_animation) {
+            return;
         }
-        runner();
+        this.frame += 1
+        if (this.frame % this.fps_calc_frames == 0) {
+            var now = Date.now();
+            this.fps = parseInt(1000*this.fps_calc_frames/(now - this.fps_last_draw_time));
+            this.fps_last_draw_time = now;
+        }
+        this.draw(this.canvas, this.system);
+        requestAnimationFrame(this.runner.bind(this));
     }
 
     stop_animation() {
@@ -73,5 +73,5 @@ export default class DynamicalSystemCanvasVisualizer {
     }
 
     draw(canvas, system) {throw new TypeError("Must override method: draw(canvas, system)");}
-    system_update_listener(system) {throw new TypeError("Must override method: set_system_state(system_update_listener)");}
+    system_update_listener(system) {throw new TypeError("Must override method: system_update_listener(system)");}
 }
