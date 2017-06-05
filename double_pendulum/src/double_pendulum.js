@@ -1,4 +1,4 @@
-import DynamicalSystem from './dynamical_system.js'
+import DynamicalSystem from './websim/dynamical_system.js'
 
 const sin = Math.sin;
 const cos = Math.cos;

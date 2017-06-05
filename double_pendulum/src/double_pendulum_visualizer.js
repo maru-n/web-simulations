@@ -1,4 +1,4 @@
-import DynamicalSystemCanvasVisualizer from './visualizer.js'
+import DynamicalSystemCanvasVisualizer from './websim/visualizer.js'
 
 
 export default class DoublePendulumVisualizer extends DynamicalSystemCanvasVisualizer {
@@ -26,7 +26,7 @@ export default class DoublePendulumVisualizer extends DynamicalSystemCanvasVisua
         super.run_animation();
     }
 
-    set_system_state(double_pendulum) {
+    system_update_listener(double_pendulum) {
         [this.x1, this.y1, this.x2, this.y2] = this.convert_xy_cordinate(...double_pendulum.get_xy());
         if (double_pendulum.running) {
             this.trajectory_xy.push([this.x2, this.y2]);

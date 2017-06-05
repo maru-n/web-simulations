@@ -1,4 +1,4 @@
-import DynamicalSystemCanvasVisualizer from './visualizer.js'
+import DynamicalSystemCanvasVisualizer from './websim/visualizer.js'
 
 
 export default class SCLVisualizer extends DynamicalSystemCanvasVisualizer {

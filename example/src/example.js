@@ -1,5 +1,6 @@
-import DynamicalSystem from './dynamical_system.js'
-import DynamicalSystemCanvasVisualizer from './visualizer.js'
+import DynamicalSystem from './websim/dynamical_system.js'
+import DynamicalSystemCanvasVisualizer from './websim/visualizer.js'
+
 
 export class Fireworks extends DynamicalSystem {
     constructor() {
