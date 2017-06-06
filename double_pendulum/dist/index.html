@@ -17,7 +17,7 @@
                 width: 100%;
             }
         }
-        
+
         #settings {
             margin: 1em 0;
         }
@@ -26,14 +26,14 @@
             width: 100%;
         }
         #playPauseBtn {
-            padding: 0.25em 1.4em;
-            position: relative;
-            display: inline-block;
-            font-weight: bold;
-            text-decoration: none;
+            font-size: large;
+            padding: 0.2em 0.8em;
+            border: none;
+            cursor: pointer;
+            outline: none;
             color: #FFF;
             background: #7F7FFF;
-            transition: .4s;
+            transition: .2s;
         }
         #playPauseBtn:hover {
             background: #ABABFF;
@@ -45,10 +45,10 @@
             <h1>Double Pendulum</h1>
             <canvas id="simCanvas"></canvas>
             <div id="controller">
-                <a href="#" id="playPauseBtn">
+                <button type="button" id="playPauseBtn">
                     <i class="fa fa-play fa-fw"  id="playIcon"></i>
                     <i class="fa fa-pause fa-fw" id="pauseIcon" style="display: none"></i>
-                </a>
+                </button>
                 <div id="settings">
                     <form>
                         <div>
