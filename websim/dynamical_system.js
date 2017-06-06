@@ -13,6 +13,10 @@ export default class DynamicalSystem {
         this.runner();
     }
 
+    step() {
+        this.update();
+    }
+
     runner() {
         if (!this.running) {
             return

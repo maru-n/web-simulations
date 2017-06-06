@@ -45,16 +45,12 @@ export default class SCL extends DynamicalSystem {
             }
         }
 
-
         super.update_state();
     }
 
     static motion(cells, x, y) {
-        let x_size = cells.length;
-        let y_size = cells[x].length;
-        let [nx, ny] = utils.get_rand_neumann_neighborhood(x, y, x_size, y_size);
         let p = cells[x][y]
-        let np = cells[nx][ny];
+        let [np, nx, ny] = utils.get_rand_neumann_neighborhood(cells, x, y);
         if (p.mobile && np.mobile && p.type!=np.type && p.bonds.length==0 && np.bonds.length==0) {
             let mobility_factor = 0.1;
             if (utils.eval_prob(mobility_factor)) {

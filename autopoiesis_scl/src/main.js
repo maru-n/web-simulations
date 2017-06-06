@@ -13,10 +13,16 @@ window.onload = () => {
             scl.stop();
             $('#playIcon').show();
             $('#pauseIcon').hide();
+            $('#stepBtn').prop('disabled', false);
         } else {
             scl.run();
             $('#playIcon').hide();
             $('#pauseIcon').show();
+            $('#stepBtn').prop('disabled', true);
         }
+    });
+
+    $('#stepBtn').on('click', function() {
+        scl.step();
     });
 }
