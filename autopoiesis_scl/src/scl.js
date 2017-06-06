@@ -29,16 +29,22 @@ export default class SCL extends DynamicalSystem {
     update() {
         for(let x = 0; x < this.x_size; x++) {
             for (var y = 0; y < this.y_size; y++) {
-                motion(this.cells, x, y);
+                SCL.motion(this.cells, x, y);
             }
         }
         SCL.reset_mobile(this.cells);
 
         for(let x = 0; x < this.x_size; x++) {
             for (var y = 0; y < this.y_size; y++) {
-                motion(this.cells, x, y);
+                SCL.production(this.cells, x, y)
+                SCL.disintegration(this.cells, x, y)
+                SCL.bonding(this.cells, x, y)
+                SCL.bond_decay(this.cells, x, y)
+                SCL.absorption(this.cells, x, y)
+                SCL.emission(this.cells, x, y)
             }
         }
+
 
         super.update_state();
     }
@@ -67,4 +73,11 @@ export default class SCL extends DynamicalSystem {
             }
         }
     }
+
+    static production(cells, x, y) {}
+    static disintegration(cells, x, y) {}
+    static bonding(cells, x, y) {}
+    static bond_decay(cells, x, y) {}
+    static absorption(cells, x, y) {}
+    static emission(cells, x, y) {}
 }
