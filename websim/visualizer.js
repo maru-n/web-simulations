@@ -43,7 +43,7 @@ export default class DynamicalSystemCanvasVisualizer {
         this.frame += 1
         if (this.frame % this.fps_calc_frames == 0) {
             var now = Date.now();
-            this.fps = parseInt(1000*this.fps_calc_frames/(now - this.fps_last_draw_time));
+            this.fps = Math.round(1000*this.fps_calc_frames/(now - this.fps_last_draw_time));
             this.fps_last_draw_time = now;
         }
         this.draw(this.canvas, this.system);
