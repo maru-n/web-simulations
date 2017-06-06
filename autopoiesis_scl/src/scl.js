@@ -29,27 +29,42 @@ export default class SCL extends DynamicalSystem {
     update() {
         for(let x = 0; x < this.x_size; x++) {
             for (var y = 0; y < this.y_size; y++) {
-                let [nx, ny] = utils.get_rand_neumann_neighborhood(x, y, this.x_size, this.y_size);
-                let p = this.cells[x][y]
-                let np = this.cells[nx][ny];
-                if (p.mobile && np.mobile && p.type!=np.type && p.bonds.length==0 && np.bonds.length==0) {
-                    let mobility_factor = 0.1;
-                    if (utils.eval_prob(mobility_factor)) {
-                        this.cells[x][y] = np;
-                        this.cells[nx][ny] = p;
-                        this.cells[x][y].mobile = false;
-                        this.cells[nx][ny].mobile = false;
-                    }
-                }
+                motion(this.cells, x, y);
             }
         }
+        SCL.reset_mobile(this.cells);
 
         for(let x = 0; x < this.x_size; x++) {
             for (var y = 0; y < this.y_size; y++) {
-                this.cells[x][y].mobile = true;
+                motion(this.cells, x, y);
             }
         }
 
         super.update_state();
+    }
+
+    static motion(cells, x, y) {
+        let x_size = cells.length;
+        let y_size = cells[x].length;
+        let [nx, ny] = utils.get_rand_neumann_neighborhood(x, y, x_size, y_size);
+        let p = cells[x][y]
+        let np = cells[nx][ny];
+        if (p.mobile && np.mobile && p.type!=np.type && p.bonds.length==0 && np.bonds.length==0) {
+            let mobility_factor = 0.1;
+            if (utils.eval_prob(mobility_factor)) {
+                cells[x][y] = np;
+                cells[nx][ny] = p;
+                cells[x][y].mobile = false;
+                cells[nx][ny].mobile = false;
+            }
+        }
+    }
+
+    static reset_mobile(cells) {
+        for(let x = 0; x < cells.length; x++) {
+            for (var y = 0; y < cells[x].length; y++) {
+                cells[x][y].mobile = true;
+            }
+        }
     }
 }
