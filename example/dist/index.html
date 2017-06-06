@@ -25,7 +25,7 @@
             border: 1px solid black;
             width: 100%;
         }
-        #playPauseBtn {
+        .ctrlBtn {
             font-size: large;
             padding: 0.2em 0.8em;
             border: none;
@@ -35,8 +35,9 @@
             background: #7F7FFF;
             transition: .2s;
         }
-        #playPauseBtn:hover {
-            background: #ABABFF;
+        .ctrlBtn:disabled {
+            background: #CCC;
+            cursor: auto;
         }
         </style>
     </head>
@@ -45,7 +46,7 @@
             <h1>Websim Example</h1>
             <canvas id="simCanvas"></canvas>
             <div id="controller">
-                <button type="button" id="playPauseBtn">
+                <button type="button" id="playPauseBtn" class="ctrlBtn">
                     <i class="fa fa-play fa-fw"  id="playIcon"></i>
                     <i class="fa fa-pause fa-fw" id="pauseIcon" style="display: none"></i>
                 </button>
