@@ -20,6 +20,7 @@ for (let i = 0; i < targets.length; i++) {
     let target = targets[i];
     let distdir = DIST_DIR + target;
     gulp.task('build:' + target, () => {
+        gulp.src('public/index.html').pipe(gulp.dest(DIST_DIR));
         gulp.src(target + '/*.html').pipe(gulp.dest(distdir));
 
         let b = browserify({
@@ -35,6 +36,7 @@ for (let i = 0; i < targets.length; i++) {
     });
 
     gulp.task('build-release:' + target, () => {
+        gulp.src('public/index.html').pipe(gulp.dest(DIST_DIR));
         gulp.src(target + '/*.html').pipe(gulp.dest(distdir));
 
         let b = browserify({
