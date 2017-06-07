@@ -1,0 +1,41 @@
+{
+  "name": "websim",
+  "version": "1.0.0",
+  "description": "Tnis is ALife simulations on web browser.",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maru-n/websim.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/maru-n/websim/issues"
+  },
+  "homepage": "https://github.com/maru-n/websim#readme",
+  "babel": {
+    "presets": [
+      "es2015",
+      "stage-0"
+    ]
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^7.3.0",
+    "browserify": "^14.4.0",
+    "exorcist": "^0.4.0",
+    "gulp": "^3.9.1",
+    "gulp-help": "^1.6.1",
+    "gulp-uglify": "^3.0.0",
+    "jquery": "^3.2.1",
+    "uglify-es": "^3.0.15",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}

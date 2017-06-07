@@ -1,4 +1,4 @@
-import DynamicalSystemCanvasVisualizer from './websim/visualizer.js'
+import DynamicalSystemCanvasVisualizer from '../websim/visualizer.js'
 
 
 export default class DoublePendulumVisualizer extends DynamicalSystemCanvasVisualizer {

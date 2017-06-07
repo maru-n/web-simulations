@@ -1,4 +1,4 @@
-import DynamicalSystem from './websim/dynamical_system.js'
+import DynamicalSystem from '../websim/dynamical_system.js'
 import utils from './utils.js'
 
 
@@ -21,19 +21,21 @@ export default class SCL extends DynamicalSystem {
                         'type': 'S',
                         'bonds': [],
                         'mobile': true,
-                        'mobility_factor': 0.1
                     };
                 } else {
                     this.cells[x][y] = {
                         'type': 'H',
                         'bonds': [],
                         'mobile': true,
-                        'mobility_factor': 0.1
                     };
                 }
             }
         }
-        this.cells[this.x_size/2][this.y_size/2] = {'type':'C', 'bonds':[], 'mobile':true};
+        this.cells[this.x_size/2][this.y_size/2] = {
+            'type':'C',
+            'bonds':[],
+            'mobile':true
+        };
 
         this.mobility_factors = {
             'H':  0.1,

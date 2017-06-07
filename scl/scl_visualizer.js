@@ -1,4 +1,4 @@
-import DynamicalSystemCanvasVisualizer from './websim/visualizer.js'
+import DynamicalSystemCanvasVisualizer from '../websim/visualizer.js'
 
 
 export default class SCLVisualizer extends DynamicalSystemCanvasVisualizer {
@@ -37,8 +37,6 @@ export default class SCLVisualizer extends DynamicalSystemCanvasVisualizer {
                 this.draw_cell(ctx, scl.cells[x][y].type, x, y);
             }
         }
-        //this.draw_bond(ctx, 10, 10, 11, 11);
-        //this.draw_bond(ctx, 0, 0, scl.x_size-1, scl.y_size-1);
         super.draw_fps();
     }
 
