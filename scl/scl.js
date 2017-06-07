@@ -36,6 +36,31 @@ export default class SCL extends DynamicalSystem {
             'bonds':[],
             'mobile':true
         };
+        let membrane_size = 6;
+        let membrane_x_min = this.x_size/2 - membrane_size/2;
+        let membrane_x_max = this.x_size/2 + membrane_size/2;
+        let membrane_y_min = this.y_size/2 - membrane_size/2;
+        let membrane_y_max = this.y_size/2 + membrane_size/2;
+        for(let x = membrane_x_min; x < membrane_x_max; x++) {
+            this.cells[x][membrane_y_min].type = 'L'
+            this.cells[x][membrane_y_min].bonds.push([x+1,membrane_y_min]);
+            this.cells[x+1][membrane_y_min].type = 'L'
+            this.cells[x+1][membrane_y_min].bonds.push([x,membrane_y_min]);
+            this.cells[x][membrane_y_max].type = 'L'
+            this.cells[x][membrane_y_max].bonds.push([x+1,membrane_y_max]);
+            this.cells[x+1][membrane_y_max].type = 'L'
+            this.cells[x+1][membrane_y_max].bonds.push([x,membrane_y_max]);
+        }
+        for(let y = membrane_y_min; y < membrane_y_max; y++) {
+            this.cells[membrane_x_min][y].type = 'L'
+            this.cells[membrane_x_min][y].bonds.push([membrane_x_min,y+1]);
+            this.cells[membrane_x_min][y+1].type = 'L'
+            this.cells[membrane_x_min][y+1].bonds.push([membrane_x_min,y]);
+            this.cells[membrane_x_max][y].type = 'L'
+            this.cells[membrane_x_max][y].bonds.push([membrane_x_max,y+1]);
+            this.cells[membrane_x_max][y+1].type = 'L'
+            this.cells[membrane_x_max][y+1].bonds.push([membrane_x_max,y]);
+        }
 
         this.mobility_factors = {
             'H':  0.1,
@@ -45,6 +70,11 @@ export default class SCL extends DynamicalSystem {
             'LS': 0.1,
         }
         this.production_prob = 0.1;
+        //this.disintegration_prob = 0.9;
+        //this.bonding_prob = 0.5;
+        //this.bond_decay_prob = 0.1;
+        this.absorption_prob = 0.1;
+        this.emission_prob = 0.5;
     }
 
     update() {
