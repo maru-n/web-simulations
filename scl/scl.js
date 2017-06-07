@@ -91,7 +91,7 @@ export default class SCL extends DynamicalSystem {
                 //SCL.disintegration(this.cells, x, y);
                 //SCL.bonding(this.cells, x, y);
                 //SCL.bond_decay(this.cells, x, y);
-                //SCL.absorption(this.cells, x, y);
+                SCL.absorption(this.cells, x, y, this.absorption_prob);
                 //SCL.emission(this.cells, x, y);
             }
         }
@@ -139,6 +139,18 @@ export default class SCL extends DynamicalSystem {
     static disintegration(cells, x, y) {}
     static bonding(cells, x, y) {}
     static bond_decay(cells, x, y) {}
-    static absorption(cells, x, y) {}
+
+    static absorption(cells, x, y, prob) {
+        let p = cells[x][y];
+        let [np, nx, ny] = utils.get_rand_moore_neighborhood(cells, x, y);
+        if (p.type != 'L' || np.type != 'S') {
+            return
+        }
+        if (utils.eval_prob(prob)) {
+            p.type = 'LS';
+            np.type = 'H';
+        }
+    }
+
     static emission(cells, x, y) {}
 }
