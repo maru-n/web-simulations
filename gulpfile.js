@@ -52,5 +52,10 @@ for (let i = 0; i < targets.length; i++) {
     });
 }
 
+var rimraf = require('rimraf');
+gulp.task('clean', function (cb) {
+    rimraf(DIST_DIR, cb);
+});
+
 gulp.task('build-release:all', targets.map((t)=>{return ('build-release:'+t)}));
 gulp.task('build:all', targets.map((t)=>{return ('build:'+t)}));
