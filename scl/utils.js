@@ -17,7 +17,7 @@ const utils = {
         return [np, nx, ny]
     },
 
-    get_rand_moor_neighborhood: (cells, x, y) => {
+    get_rand_moore_neighborhood: (cells, x, y) => {
         let x_size = cells.length;
         let y_size = cells[x].length;
         let neighborhood = [
@@ -38,7 +38,7 @@ const utils = {
     get_rand_2_moore_neighborhood: (cells, x, y) => {
         let x_size = cells.length;
         let y_size = cells[x].length;
-        let [np1, nx1, ny1] = utils.get_rand_moor_neighborhood(cells, x, y);
+        let [np1, nx1, ny1] = utils.get_rand_moore_neighborhood(cells, x, y);
         let neighborhood2;
         if (x == nx1) {
             neighborhood2 = [
