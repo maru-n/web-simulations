@@ -110,7 +110,9 @@ export default class SCL extends DynamicalSystem {
     static motion(cells, x, y, mobility_factors) {
         let p = cells[x][y];
         let [np, nx, ny] = utils.get_rand_neumann_neighborhood(cells, x, y);
-        if (p.mobile && np.mobile && p.type!=np.type) {
+        if (!p.mobile || !np.mobile || p.type==np.type) {
+            return
+        }
             let prob = Math.sqrt(mobility_factors[p.type] * mobility_factors[np.type]);
             if (utils.eval_prob(prob)) {
                 cells[x][y] = np;
@@ -119,9 +121,8 @@ export default class SCL extends DynamicalSystem {
                 cells[nx][ny].mobile = false;
             }
         }
-    }
 
-    static production(cells, x, y, production_prob) {
+    static production(cells, x, y, prob) {
         let p = cells[x][y];
         if (p.type != 'C') {
             return
@@ -130,7 +131,7 @@ export default class SCL extends DynamicalSystem {
         if (np1.type != 'S' || np2.type != 'S') {
             return
         }
-        if (utils.eval_prob(production_prob)) {
+        if (utils.eval_prob(prob)) {
             np1.type = 'H';
             np2.type = 'L'
         }
