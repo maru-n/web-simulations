@@ -48,12 +48,12 @@ export default class SCL extends DynamicalSystem {
     }
 
     update() {
+        SCL.reset_mobile(this.cells);
         for(let x = 0; x < this.x_size; x++) {
             for (let y = 0; y < this.y_size; y++) {
                 SCL.motion(this.cells, x, y, this.mobility_factors);
             }
         }
-        SCL.reset_mobile(this.cells);
 
         for(let x = 0; x < this.x_size; x++) {
             for (let y = 0; y < this.y_size; y++) {
@@ -69,24 +69,24 @@ export default class SCL extends DynamicalSystem {
         super.update_state();
     }
 
+    static reset_mobile(cells) {
+        for(let x = 0; x < cells.length; x++) {
+            for (let y = 0; y < cells[x].length; y++) {
+                cells[x][y].mobile = (cells[x][y].bonds.length==0);
+            }
+        }
+    }
+
     static motion(cells, x, y, mobility_factors) {
         let p = cells[x][y];
         let [np, nx, ny] = utils.get_rand_neumann_neighborhood(cells, x, y);
-        if (p.mobile && np.mobile && p.type!=np.type && p.bonds.length==0 && np.bonds.length==0) {
+        if (p.mobile && np.mobile && p.type!=np.type) {
             let prob = Math.sqrt(mobility_factors[p.type] * mobility_factors[np.type]);
             if (utils.eval_prob(prob)) {
                 cells[x][y] = np;
                 cells[nx][ny] = p;
                 cells[x][y].mobile = false;
                 cells[nx][ny].mobile = false;
-            }
-        }
-    }
-
-    static reset_mobile(cells) {
-        for(let x = 0; x < cells.length; x++) {
-            for (let y = 0; y < cells[x].length; y++) {
-                cells[x][y].mobile = true;
             }
         }
     }

@@ -33,8 +33,15 @@ export default class SCLVisualizer extends DynamicalSystemCanvasVisualizer {
         let ctx = canvas.getContext('2d');
 
         for(let x = 0; x < scl.x_size; x++) {
-            for (var y = 0; y < scl.y_size; y++) {
-                this.draw_cell(ctx, scl.cells[x][y].type, x, y);
+            for (let y = 0; y < scl.y_size; y++) {
+                let p = scl.cells[x][y];
+                this.draw_cell(ctx, p.type, x, y);
+                for (let i = 0; i < p.bonds.length; i++) {
+                    let b = p.bonds[i];
+                    if (x < b[0] || y < b[1]) {
+                        this.draw_bond(ctx, x, y, b[0], b[1]);
+                    }
+                }
             }
         }
         super.draw_fps();
@@ -77,14 +84,13 @@ export default class SCLVisualizer extends DynamicalSystemCanvasVisualizer {
         ctx.beginPath();
         ctx.strokeStyle = SCLVisualizer.LINK_COLOR;
         ctx.lineWidth = SCLVisualizer.LINK_LINE_WIDTH;
-
         let start_x = (0.5 + x1 + (x2 - x1) * SCLVisualizer.LINK_SIZE / 2) * this.cell_size ;
         let start_y = (0.5 + y1 + (y2 - y1) * SCLVisualizer.LINK_SIZE / 2) * this.cell_size ;
         let end_x = (0.5 + x2 - (x2 - x1) * SCLVisualizer.LINK_SIZE / 2) * this.cell_size ;
         let end_y = (0.5 + y2 - (y2 - y1) * SCLVisualizer.LINK_SIZE / 2) * this.cell_size ;
         ctx.moveTo(start_x, start_y);
         ctx.lineTo(end_x, end_y);
-        ctx.stroke()
+        ctx.stroke();
         ctx.restore();
     }
 }
