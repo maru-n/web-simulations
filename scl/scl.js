@@ -17,7 +17,7 @@ export default class SCL extends DynamicalSystem {
         for(let x = 0; x < this.x_size; x++) {
             this.cells[x] = new Array(this.y_size);
             for (let y = 0; y < this.y_size; y++) {
-                if ( utils.eval_prob(0.7) ) {
+                if ( utils.eval_prob(0.8) ) {
                 //if ( utils.eval_prob(0.8) &&  i > 10 && i<20 && j>20 && j<30) {
                     this.cells[x][y] = new Cell('S', x, y);
                 } else {
@@ -48,19 +48,19 @@ export default class SCL extends DynamicalSystem {
         }
         */
         this.mobility_factors = {
-            'H':  0.2,
-            'S':  0.2,
+            'H':  0.1,
+            'S':  0.1,
             'C':  0.0001,
-            'L':  0.2,
-            'LS': 0.2,
+            'L':  0.05,
+            'LS': 0.05,
         }
 
-        this.production_prob = 0.99;
-        this.disintegration_prob = 0.001;
+        this.production_prob = 1;
+        this.disintegration_prob = 0.0005;
         this.chainInhibitBondFlag = true;
         this.catInhibitBondFlag = true;
         this.chain_initiate_prob = 0.1;
-        this.chain_extend_prob = 0.8;
+        this.chain_extend_prob = 0.6;
         this.chain_splice_prob = 0.9;
         
         //this.bond_decay_prob = 0.1;
