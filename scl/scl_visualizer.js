@@ -44,6 +44,11 @@ export default class SCLVisualizer extends DynamicalSystemCanvasVisualizer {
             }
         }
         super.draw_fps();
+        
+        ctx.font = "1em sans-serif";
+        ctx.fillStyle = '#000000';
+        ctx.fillText(scl.step+' step', 10, this.height-10);
+        ctx.restore();
     }
 
     draw_cell(ctx, type, x, y, size) {

@@ -12,6 +12,7 @@ export default class SCL extends DynamicalSystem {
     init() {
         this.x_size = 40;
         this.y_size = 30;
+        this.step = 0;
         this.cells = new Array(this.x_size);
         for(let x = 0; x < this.x_size; x++) {
             this.cells[x] = new Array(this.y_size);
@@ -45,7 +46,6 @@ export default class SCL extends DynamicalSystem {
             this.cells[membrane_x_max][y].add_bond(this.cells[membrane_x_max][y-1]);
         }
 
-
         this.mobility_factors = {
             'H':  0.1,
             'S':  0.1,
@@ -62,6 +62,8 @@ export default class SCL extends DynamicalSystem {
     }
 
     update() {
+        this.step += 1;
+        
         SCL.reset_mobile(this.cells);
         for(let x = 0; x < this.x_size; x++) {
             for (let y = 0; y < this.y_size; y++) {

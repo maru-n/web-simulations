@@ -23,6 +23,6 @@ window.onload = () => {
     });
 
     $('#stepBtn').on('click', function() {
-        scl.step();
+        scl.update();
     });
 }
