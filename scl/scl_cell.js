@@ -28,7 +28,7 @@ export default class Cell {
         if (this.is_max_bonding()) {
             throw new TypeError("Bonding is more than max size.");
         }
-        if (cell.type != 'L') {
+        if (['L', 'LS'].indexOf(cell.type) == -1) {
             throw new TypeError("Target cell is not LINK.");
         }
         this.bonds.push(cell);
@@ -40,6 +40,15 @@ export default class Cell {
     
     is_max_bonding() {
         return (this.bonds.length >= Cell.MAX_BOND_NUM);
+    }
+    
+    is_bonding_to(x, y) {
+        for (let bp of this.get_bonds_pos()) {
+            if (bp.x == x && bp.y == y) {
+                return true
+            }
+        }
+        return false
     }
     
     get_bonds_pos() {

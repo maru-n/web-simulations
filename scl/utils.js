@@ -2,63 +2,62 @@ const utils = {
     eval_prob: (p) => {
         return (Math.random() < p)
     },
-
-    get_rand_neumann_neighborhood: (cells, x, y) => {
-        let x_size = cells.length;
-        let y_size = cells[x].length;
+    
+    get_neumann_neighborhood: (x, y, x_size, y_size) => {
         let neighborhood = [
-            [ x                 , (y-1+y_size)%y_size],
-            [(x-1+x_size)%x_size, y],
-            [(x+1)%x_size       , y],
-            [ x                 , (y+1)%y_size]
+            {x: x                 , y:(y-1+y_size)%y_size},
+            {x:(x-1+x_size)%x_size, y: y},
+            {x:(x+1)%x_size       , y: y},
+            {x: x                 , y:(y+1)%y_size}
         ];
-        let [nx,ny] = neighborhood[Math.floor(Math.random()*neighborhood.length)];
-        let np = cells[nx][ny]
-        return [np, nx, ny]
+        return neighborhood
     },
 
-    get_rand_moore_neighborhood: (cells, x, y) => {
-        let x_size = cells.length;
-        let y_size = cells[x].length;
+    get_rand_neumann_neighborhood: (x, y, x_size, y_size) => {
+        let neighborhood = utils.get_neumann_neighborhood(x, y, x_size, y_size);
+        return neighborhood[Math.floor(Math.random()*neighborhood.length)];
+    },
+    
+    get_moore_neighborhood: (x, y, x_size, y_size) => {
         let neighborhood = [
-            [(x-1+x_size)%x_size, (y-1+y_size)%y_size],
-            [ x                 , (y-1+y_size)%y_size],
-            [(x+1)%x_size       , (y-1+y_size)%y_size],
-            [(x-1+x_size)%x_size, y],
-            [(x+1)%x_size       , y],
-            [(x-1+x_size)%x_size, (y+1)%y_size],
-            [ x                 , (y+1)%y_size],
-            [(x+1)%x_size       , (y+1)%y_size]
+            {x:(x-1+x_size)%x_size, y:(y-1+y_size)%y_size},
+            {x: x                 , y:(y-1+y_size)%y_size},
+            {x:(x+1)%x_size       , y:(y-1+y_size)%y_size},
+            {x:(x-1+x_size)%x_size, y: y},
+            {x:(x+1)%x_size       , y: y},
+            {x:(x-1+x_size)%x_size, y:(y+1)%y_size},
+            {x: x                 , y:(y+1)%y_size},
+            {x:(x+1)%x_size       , y:(y+1)%y_size}
         ];
-        let [nx,ny] = neighborhood[Math.floor(Math.random()*neighborhood.length)];
-        let np = cells[nx][ny]
-        return [np, nx, ny]
+        return neighborhood;
     },
 
-    get_rand_2_moore_neighborhood: (cells, x, y) => {
-        let x_size = cells.length;
-        let y_size = cells[x].length;
-        let [np1, nx1, ny1] = utils.get_rand_moore_neighborhood(cells, x, y);
+    get_rand_moore_neighborhood: (x, y, x_size, y_size) => {
+        let neighborhood = utils.get_moore_neighborhood(x, y, x_size, y_size);
+        return neighborhood[Math.floor(Math.random()*neighborhood.length)];
+    },
+
+    get_rand_2_moore_neighborhood: (x, y, x_size, y_size) => {
+        let nxy1 = utils.get_rand_moore_neighborhood(x, y, x_size, y_size);
         let neighborhood2;
-        if (x == nx1) {
+        if (x == nxy1.x) {
             neighborhood2 = [
-                [(nx1-1+x_size)%x_size, ny1],
-                [(nx1+1)%x_size       , ny1]
+                {x:(nxy1.x-1+x_size)%x_size, y:nxy1.y},
+                {x:(nxy1.x+1)%x_size       , y:nxy1.y}
             ]
-        } else if (y == ny1) {
+        } else if (y == nxy1.y) {
             neighborhood2 = [
-                [nx1, (ny1-1+y_size)%y_size],
-                [nx1, (ny1+1)%y_size]
+                {x:nxy1.x, y:(nxy1.y-1+y_size)%y_size},
+                {x:nxy1.x, y:(nxy1.y+1)%y_size}
             ]
         } else {
             neighborhood2 = [
-                [nx1, y],
-                [x, ny1]
+                {x:nxy1.x, y:y},
+                {x:x, y:nxy1.y}
             ]
         }
-        let [nx2,ny2] = neighborhood2[Math.floor(Math.random()*neighborhood2.length)];
-        let np2 = cells[nx2][ny2];
-        return [np1, nx1, ny1, np2, nx2, ny2]
+        let nxy2 = neighborhood2[Math.floor(Math.random()*neighborhood2.length)];
+        return [nxy1, nxy2]
     }
 }
 

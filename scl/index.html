@@ -53,6 +53,46 @@
                 <button type="button" id="stepBtn" class="ctrlBtn">
                     <i class="fa fa-step-forward fa-fw"  id="playIcon"></i>
                 </button>
+                <div id="settings">
+                    <form>
+                        <div>
+                            <label id="production_prob">Production Probability
+                                <input type="range"  min="0" max="1" step="0.001">
+                                <input type="number" min="0" max="1" step="0.001">
+                            </label>
+                        </div>
+                        <div>
+                            <label id="chain_initiate_prob">Bonding Probability (chain initiate)
+                                <input type="range"  min="0" max="1" step="0.001">
+                                <input type="number" min="0" max="1" step="0.001">
+                            </label>
+                        </div>
+                        <div>
+                            <label id="chain_extend_prob">Bonding Probability (chain extend)
+                                <input type="range"  min="0" max="1" step="0.001">
+                                <input type="number" min="0" max="1" step="0.001">
+                            </label>
+                        </div>
+                        <div>
+                            <label id="chain_splice_prob">Bonding Probability (chain splice)
+                                <input type="range"  min="0" max="1" step="0.001">
+                                <input type="number" min="0" max="1" step="0.001">
+                            </label>
+                        </div>
+                        <div>
+                            <label id="absorption_prob">Absorption Probability
+                                <input type="range"  min="0" max="1" step="0.001">
+                                <input type="number" min="0" max="1" step="0.001">
+                            </label>
+                        </div>
+                        <div>
+                            <label id="emission_prob">Emission Probability
+                                <input type="range"  min="0" max="1" step="0.001">
+                                <input type="number" min="0" max="1" step="0.001">
+                            </label>
+                        </div>
+                    </form>
+                <div>
             </div>
         </div>
     </body>
