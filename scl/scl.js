@@ -25,13 +25,13 @@ export default class SCL extends DynamicalSystem {
                 }
             }
         }
-        this.cells[this.x_size/2][this.y_size/2].set_type('C');
+        this.cells[Math.floor(this.x_size/2)][Math.floor(this.y_size/2)].set_type('C');
         /*
         let membrane_size = 6;
-        let membrane_x_min = this.x_size/2 - membrane_size/2;
-        let membrane_x_max = this.x_size/2 + membrane_size/2;
-        let membrane_y_min = this.y_size/2 - membrane_size/2;
-        let membrane_y_max = this.y_size/2 + membrane_size/2;
+        let membrane_x_min = Math.floor(this.x_size/2 - membrane_size/2);
+        let membrane_x_max = Math.floor(this.x_size/2 + membrane_size/2);
+        let membrane_y_min = Math.floor(this.y_size/2 - membrane_size/2);
+        let membrane_y_max = Math.floor(this.y_size/2 + membrane_size/2);
         this.cells[membrane_x_min][membrane_y_min].set_type('L');
         this.cells[membrane_x_min][membrane_y_max].set_type('L');
         for(let x = membrane_x_min+1; x < membrane_x_max+1; x++) {
