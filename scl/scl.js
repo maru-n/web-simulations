@@ -49,11 +49,11 @@ export default class SCL extends DynamicalSystem {
         */
 
         this.mobility_factors = {
-            'H':  0.1,
-            'S':  0.1,
+            'H':  0.2,
+            'S':  0.2,
             'C':  0.001,
-            'L':  0.1,
-            'LS': 0.1,
+            'L':  0.2,
+            'LS': 0.2,
         }
 
         this.production_prob = 0.9;
@@ -183,9 +183,6 @@ export default class SCL extends DynamicalSystem {
                     return
                 }
             }
-        }
-        if (this.chainInhibitBondFlag) {
-            
         }
         for (let bp of p.get_bonds_pos()) {
             let dx = Math.abs(bp.x - np.x);

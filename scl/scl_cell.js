@@ -7,12 +7,14 @@ export default class Cell {
         this.type = type;
         this.bonds = [];
         this.mobile = true;
+        this.disintegrating = false;
     }
 
     set_type(type) {
         this.type = type;
-        if (['H', 'S', 'C'].indexOf(this.type) != -1) {
+        if (['H','S','C'].indexOf(this.type)!=-1) {
             this.bonds = [];
+            this.disintegrating = false;
         }
     }
     
