@@ -151,7 +151,7 @@ export default class SCL extends DynamicalSystem {
         if ( ['L', 'LS'].indexOf(p.type) == -1 || ['L', 'LS'].indexOf(np.type) == -1 ) {
             return
         }
-        if (p.is_max_bonding() || np.is_max_bonding()) {
+        if (p.is_max_bonding() || np.is_max_bonding() || p.is_bonding_to(nx, ny)) {
             return
         }
         if (this.chainInhibitBondFlag) {
