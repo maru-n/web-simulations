@@ -56,17 +56,17 @@ export default class SCL extends DynamicalSystem {
             'LS': 0.1,
         }
 
-        this.production_prob = 0.1;
+        this.production_prob = 0.9;
         //this.disintegration_prob = 0.9;
         this.chainInhibitBondFlag = true;
         this.catInhibitBondFlag = true;
         //this.bonding_prob = 1.0;
         this.chain_initiate_prob = 0.1;
         this.chain_extend_prob = 0.5;
-        this.chain_splice_prob = 0.5;
+        this.chain_splice_prob = 0.9;
         
         //this.bond_decay_prob = 0.1;
-        this.absorption_prob = 0.1;
+        this.absorption_prob = 0.5;
         this.emission_prob = 0.5;
     }
 
