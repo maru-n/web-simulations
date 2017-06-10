@@ -35,7 +35,7 @@ export default class SCLVisualizer extends DynamicalSystemCanvasVisualizer {
         for(let x = 0; x < scl.x_size; x++) {
             for (let y = 0; y < scl.y_size; y++) {
                 let p = scl.cells[x][y];
-                this.draw_cell(ctx, p.type, x, y);
+                this.draw_cell(ctx, p, x, y);
                 for (let bp of p.get_bonds_pos()) {
                     if (x < bp.x || y < bp.y) {
                         this.draw_bond(ctx, x, y, bp.x, bp.y);
@@ -51,9 +51,9 @@ export default class SCLVisualizer extends DynamicalSystemCanvasVisualizer {
         ctx.restore();
     }
 
-    draw_cell(ctx, type, x, y, size) {
+    draw_cell(ctx, cell, x, y, size) {
         ctx.save();
-        if (type == 'S' || type == 'LS') {
+        if (cell.is_type(['S','LS'])) {
             ctx.beginPath();
             ctx.fillStyle = SCLVisualizer.SUBSTRATE_COLOR;
             ctx.arc(this.origin[0] + x*this.cell_size + this.cell_size/2,
@@ -61,7 +61,7 @@ export default class SCLVisualizer extends DynamicalSystemCanvasVisualizer {
                     SCLVisualizer.SUBSTRATE_SIZE*this.cell_size/2,
                     0, 2*Math.PI, false);
             ctx.fill();
-        } else if (type == 'C') {
+        } else if (cell.is_type('C')) {
             ctx.beginPath();
             ctx.fillStyle = SCLVisualizer.CATALYST_COLOR;
             ctx.arc(this.origin[0] + x*this.cell_size + this.cell_size/2,
@@ -70,7 +70,7 @@ export default class SCLVisualizer extends DynamicalSystemCanvasVisualizer {
                     0, 2*Math.PI, false);
             ctx.fill();
         }
-        if (type == 'L' || type == 'LS') {
+        if (cell.is_type(['L','LS'])) {
             ctx.beginPath();
             ctx.strokeStyle = SCLVisualizer.LINK_COLOR;
             ctx.lineWidth = SCLVisualizer.LINK_LINE_WIDTH;

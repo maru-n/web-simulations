@@ -4,22 +4,30 @@ export default class Cell {
     constructor(type, x, y) {
         this.x = x;
         this.y = y;
-        this.type = type;
-        this.bonds = [];
+        this._type = type;
+        this._bonds = [];
         this.mobile = true;
         this.disintegrating = false;
     }
 
     set_type(type) {
-        this.type = type;
-        if (['H','S','C'].indexOf(this.type)!=-1) {
-            this.bonds = [];
+        this._type = type;
+        if (!this.is_type(['L','LS'])) {
+            this.clear_bonds();
             this.disintegrating = false;
         }
     }
     
+    get_type() {
+        return this._type
+    }
+    
+    same_type(cell) {
+        return (this._type == cell._type)
+    }
+    
     reset_mobile() {
-        if (this.bonds.length == 0) {
+        if (this._bonds.length == 0) {
             this.mobile = true;
         } else {
             this.mobile = false;
@@ -30,18 +38,40 @@ export default class Cell {
         if (this.is_max_bonding()) {
             throw new TypeError("Bonding is more than max size.");
         }
-        if (['L', 'LS'].indexOf(cell.type) == -1) {
+        if (!this.is_type(['L','LS'])) {
             throw new TypeError("Target cell is not LINK.");
         }
-        this.bonds.push(cell);
+        this._bonds.push(cell);
         this.mobile = false;
         if (recurcive) {
             cell.add_bond(this, false);
         }
     }
     
+    clear_bonds() {
+        for (let bp of this._bonds) {
+            bp.remove_bond(this, false);
+        }
+        this._bonds = [];
+    }
+    
+    remove_bond(cell, recurcive=true) {
+        this._bonds.splice(this._bonds.indexOf(cell), 1);
+        if (recurcive) {
+            cell.remove_bond(this, false);
+        }
+    }
+    
+    is_type(type) {
+        if (Array.isArray(type)) {
+            return (type.indexOf(this._type) != -1);
+        } else {
+            return (this._type == type)
+        }
+    }
+    
     is_max_bonding() {
-        return (this.bonds.length >= Cell.MAX_BOND_NUM);
+        return (this._bonds.length >= Cell.MAX_BOND_NUM);
     }
     
     is_bonding_to(x, y) {
@@ -54,6 +84,10 @@ export default class Cell {
     }
     
     get_bonds_pos() {
-        return this.bonds.map((c)=>{return {x:c.x, y:c.y}});
+        return this._bonds.map((c)=>{return {x:c.x, y:c.y}});
+    }
+    
+    bonds_num() {
+        return this._bonds.length
     }
 }

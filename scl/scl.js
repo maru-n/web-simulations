@@ -17,7 +17,7 @@ export default class SCL extends DynamicalSystem {
         for(let x = 0; x < this.x_size; x++) {
             this.cells[x] = new Array(this.y_size);
             for (let y = 0; y < this.y_size; y++) {
-                if ( utils.eval_prob(0.8) ) {
+                if ( utils.eval_prob(0.7) ) {
                 //if ( utils.eval_prob(0.8) &&  i > 10 && i<20 && j>20 && j<30) {
                     this.cells[x][y] = new Cell('S', x, y);
                 } else {
@@ -47,22 +47,20 @@ export default class SCL extends DynamicalSystem {
             this.cells[membrane_x_max][y].add_bond(this.cells[membrane_x_max][y-1]);
         }
         */
-
         this.mobility_factors = {
             'H':  0.2,
             'S':  0.2,
-            'C':  0.001,
+            'C':  0.0001,
             'L':  0.2,
             'LS': 0.2,
         }
 
-        this.production_prob = 0.9;
-        //this.disintegration_prob = 0.9;
+        this.production_prob = 0.99;
+        this.disintegration_prob = 0.001;
         this.chainInhibitBondFlag = true;
         this.catInhibitBondFlag = true;
-        //this.bonding_prob = 1.0;
         this.chain_initiate_prob = 0.1;
-        this.chain_extend_prob = 0.5;
+        this.chain_extend_prob = 0.8;
         this.chain_splice_prob = 0.9;
         
         //this.bond_decay_prob = 0.1;
@@ -88,7 +86,7 @@ export default class SCL extends DynamicalSystem {
         for(let x = 0; x < this.x_size; x++) {
             for (let y = 0; y < this.y_size; y++) {
                 this.production(x, y);
-                //SCL.disintegration(this.cells, x, y, this.
+                this.disintegration(x, y);
                 this.bonding(x, y);
                 //SCL.bond_decay(this.cells, x, y);
                 this.absorption(x, y);
@@ -103,10 +101,11 @@ export default class SCL extends DynamicalSystem {
         let p = this.cells[x][y];
         let nxy = utils.get_rand_neumann_neighborhood(x, y, this.x_size, this.y_size);
         let np = this.cells[nxy.x][nxy.y];
-        if (!p.mobile || !np.mobile || p.type==np.type) {
+        //if (!p.mobile || !np.mobile || p.same_type(np)) {
+        if (!p.mobile || !np.mobile) {
             return
         }
-        let prob = Math.sqrt(this.mobility_factors[p.type] * this.mobility_factors[np.type]);
+        let prob = Math.sqrt(this.mobility_factors[p.get_type()] * this.mobility_factors[np.get_type()]);
         if (utils.eval_prob(prob)) {
             this.swap_cell(x, y, nxy.x, nxy.y);
             p.mobile = false;
@@ -126,32 +125,49 @@ export default class SCL extends DynamicalSystem {
 
     production(x, y) {
         let p = this.cells[x][y];
-        if (p.type != 'C') {
+        if (!p.is_type('C')) {
             return
         }
         let [np1_xy, np2_xy] = utils.get_rand_2_moore_neighborhood(x, y, this.x_size, this.y_size);
         let np1 = this.cells[np1_xy.x][np1_xy.y];
         let np2 = this.cells[np2_xy.x][np2_xy.y];
-        if (np1.type != 'S' || np2.type != 'S') {
-            return
-        }
-        if (utils.eval_prob(this.production_prob)) {
+        if (np1.is_type('S') && np2.is_type('S') && utils.eval_prob(this.production_prob)) {
             np1.set_type('H');
             np2.set_type('L');
         }
     }
 
-    static disintegration(cells, x, y, prob) {}
+    disintegration(x, y) {
+        let p = this.cells[x][y];
+        if (!p.is_type(['L','LS'])) {
+            return
+        }
+        if (utils.eval_prob(this.disintegration_prob) ) {
+            p.disintegrating = true;
+        }
+
+        let nxy = utils.get_rand_moore_neighborhood(x, y, this.x_size, this.y_size);
+        let np = this.cells[nxy.x][nxy.y];
+        if (p.disintegrating && p.is_type('LS') && np.is_type('H')) {
+            p.set_type('L');
+            np.set_type('S');
+        }
+        nxy = utils.get_rand_moore_neighborhood(x, y, this.x_size, this.y_size);
+        np = this.cells[nxy.x][nxy.y];
+        if (p.disintegrating && p.is_type('L') && np.is_type('H')) {
+            p.set_type('S');
+            np.set_type('S');
+        }
+    }
 
     bonding(x, y) {
         let nxy = utils.get_rand_moore_neighborhood(x, y, this.x_size, this.y_size);
-        let nx = nxy.x, ny = nxy.y;
         let p = this.cells[x][y];
         let np = this.cells[nxy.x][nxy.y];
-        if ( ['L', 'LS'].indexOf(p.type) == -1 || ['L', 'LS'].indexOf(np.type) == -1 ) {
+        if ( !p.is_type(['L','LS']) || !np.is_type(['L','LS']) ) {
             return
         }
-        if (p.is_max_bonding() || np.is_max_bonding() || p.is_bonding_to(nx, ny)) {
+        if (p.is_max_bonding() || np.is_max_bonding() || p.is_bonding_to(nxy.x, nxy.y)) {
             return
         }
         if (this.chainInhibitBondFlag) {
@@ -163,7 +179,7 @@ export default class SCL extends DynamicalSystem {
                     }
                 }
             }
-            neighborhood = utils.get_moore_neighborhood(nx, ny, this.x_size, this.y_size);
+            neighborhood = utils.get_moore_neighborhood(nxy.x, nxy.y, this.x_size, this.y_size);
             for (let xy1 of neighborhood) {
                 for(let xy2 of neighborhood) {
                     if (this.cells[xy1.x][xy1.y].is_bonding_to(xy2.x, xy2.y)) {
@@ -174,12 +190,12 @@ export default class SCL extends DynamicalSystem {
         }
         if (this.catInhibitBondFlag) {
             for (let xy of utils.get_moore_neighborhood(x, y, this.x_size, this.y_size)) {
-                if (this.cells[xy.x][xy.y].type == 'C') {
+                if (this.cells[xy.x][xy.y].is_type('C')) {
                     return
                 }
             }
-            for (let xy of utils.get_moore_neighborhood(nx, ny, this.x_size, this.y_size)) {
-                if (this.cells[xy.x][xy.y].type == 'C') {
+            for (let xy of utils.get_moore_neighborhood(nxy.x, nxy.y, this.x_size, this.y_size)) {
+                if (this.cells[xy.x][xy.y].is_type('C')) {
                     return
                 }
             }
@@ -203,9 +219,9 @@ export default class SCL extends DynamicalSystem {
             }
         }
         let prob;
-        if (p.bonds.length == 0 && np.bonds.length == 0) {
+        if (p.bonds_num() == 0 && np.bonds_num() == 0) {
             prob = this.chain_initiate_prob;
-        } else if (p.bonds.length == 1 && np.bonds.length == 1) {
+        } else if (p.bonds_num() == 1 && np.bonds_num() == 1) {
             prob = this.chain_splice_prob;
         } else {
             prob = this.chain_extend_prob;
@@ -221,10 +237,7 @@ export default class SCL extends DynamicalSystem {
         let nxy = utils.get_rand_moore_neighborhood(x, y, this.x_size, this.y_size);
         let p = this.cells[x][y];
         let np = this.cells[nxy.x][nxy.y];
-        if (p.type != 'L' || np.type != 'S') {
-            return
-        }
-        if (utils.eval_prob(this.absorption_prob)) {
+        if (p.is_type('L') && np.is_type('S') && utils.eval_prob(this.absorption_prob)) {
             p.set_type('LS');
             np.set_type('H');
         }
@@ -234,10 +247,7 @@ export default class SCL extends DynamicalSystem {
         let nxy = utils.get_rand_moore_neighborhood(x, y, this.x_size, this.y_size);
         let p = this.cells[x][y];
         let np = this.cells[nxy.x][nxy.y];
-        if (p.type != 'LS' || np.type != 'H') {
-            return
-        }
-        if (utils.eval_prob(this.emission_prob)) {
+        if (p.is_type('LS') && np.is_type('H') && utils.eval_prob(this.emission_prob)) {
             p.set_type('L');
             np.set_type('S');
         }

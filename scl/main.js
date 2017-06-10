@@ -36,6 +36,16 @@ window.onload = () => {
         scl.production_prob = p;
     });
 
+    $('#disintegration_prob>input[type=range]').on('input change', function(){
+        var p = $(this).val();
+        scl.disintegration_prob = p;
+        console.log('disintegration_prob:'+p);
+    });
+    $('#disintegration_prob>input[type=number]').on('input', function () {
+        var p = $(this).val();
+        scl.disintegration_prob = p;
+    });
+
     $('#chain_initiate_prob>input[type=range]').on('input change', function(){
         var p = $(this).val();
         scl.chain_initiate_prob = p;
@@ -64,6 +74,16 @@ window.onload = () => {
     $('#chain_splice_prob>input[type=number]').on('input', function () {
         var p = $(this).val();
         scl.chain_splice_prob = p;
+    });
+
+    $('#bond_decay_prob>input[type=range]').on('input change', function(){
+        var p = $(this).val();
+        scl.absorption_prob = p;
+        console.log('bond_decay_prob:'+p);
+    });
+    $('#bond_decay_prob>input[type=number]').on('input', function () {
+        var p = $(this).val();
+        scl.bond_decay_prob = p;
     });
 
     $('#absorption_prob>input[type=range]').on('input change', function(){
