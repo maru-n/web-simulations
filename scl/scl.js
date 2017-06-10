@@ -1,4 +1,5 @@
 import DynamicalSystem from '../websim/dynamical_system.js'
+import Cell from './scl_cell.js'
 import utils from './utils.js'
 
 
@@ -17,50 +18,33 @@ export default class SCL extends DynamicalSystem {
             for (let y = 0; y < this.y_size; y++) {
                 if ( utils.eval_prob(0.8) ) {
                 //if ( utils.eval_prob(0.8) &&  i > 10 && i<20 && j>20 && j<30) {
-                    this.cells[x][y] = {
-                        'type': 'S',
-                        'bonds': [],
-                        'mobile': true,
-                    };
+                    this.cells[x][y] = new Cell('S', x, y);
                 } else {
-                    this.cells[x][y] = {
-                        'type': 'H',
-                        'bonds': [],
-                        'mobile': true,
-                    };
+                    this.cells[x][y] = new Cell('H', x, y);
                 }
             }
         }
-        this.cells[this.x_size/2][this.y_size/2] = {
-            'type':'C',
-            'bonds':[],
-            'mobile':true
-        };
+        this.cells[this.x_size/2][this.y_size/2].set_type('C');
         let membrane_size = 6;
         let membrane_x_min = this.x_size/2 - membrane_size/2;
         let membrane_x_max = this.x_size/2 + membrane_size/2;
         let membrane_y_min = this.y_size/2 - membrane_size/2;
         let membrane_y_max = this.y_size/2 + membrane_size/2;
-        for(let x = membrane_x_min; x < membrane_x_max; x++) {
-            this.cells[x][membrane_y_min].type = 'L'
-            this.cells[x][membrane_y_min].bonds.push([x+1,membrane_y_min]);
-            this.cells[x+1][membrane_y_min].type = 'L'
-            this.cells[x+1][membrane_y_min].bonds.push([x,membrane_y_min]);
-            this.cells[x][membrane_y_max].type = 'L'
-            this.cells[x][membrane_y_max].bonds.push([x+1,membrane_y_max]);
-            this.cells[x+1][membrane_y_max].type = 'L'
-            this.cells[x+1][membrane_y_max].bonds.push([x,membrane_y_max]);
+        this.cells[membrane_x_min][membrane_y_min].set_type('L');
+        this.cells[membrane_x_min][membrane_y_max].set_type('L');
+        for(let x = membrane_x_min+1; x < membrane_x_max+1; x++) {
+            this.cells[x][membrane_y_min].set_type('L');
+            this.cells[x][membrane_y_min].add_bond(this.cells[x-1][membrane_y_min]);
+            this.cells[x][membrane_y_max].set_type('L');
+            this.cells[x][membrane_y_max].add_bond(this.cells[x-1][membrane_y_max]);
         }
-        for(let y = membrane_y_min; y < membrane_y_max; y++) {
-            this.cells[membrane_x_min][y].type = 'L'
-            this.cells[membrane_x_min][y].bonds.push([membrane_x_min,y+1]);
-            this.cells[membrane_x_min][y+1].type = 'L'
-            this.cells[membrane_x_min][y+1].bonds.push([membrane_x_min,y]);
-            this.cells[membrane_x_max][y].type = 'L'
-            this.cells[membrane_x_max][y].bonds.push([membrane_x_max,y+1]);
-            this.cells[membrane_x_max][y+1].type = 'L'
-            this.cells[membrane_x_max][y+1].bonds.push([membrane_x_max,y]);
+        for(let y = membrane_y_min+1; y < membrane_y_max+1; y++) {
+            this.cells[membrane_x_min][y].set_type('L');
+            this.cells[membrane_x_min][y].add_bond(this.cells[membrane_x_min][y-1]);
+            this.cells[membrane_x_max][y].set_type('L');
+            this.cells[membrane_x_max][y].add_bond(this.cells[membrane_x_max][y-1]);
         }
+
 
         this.mobility_factors = {
             'H':  0.1,
@@ -102,7 +86,7 @@ export default class SCL extends DynamicalSystem {
     static reset_mobile(cells) {
         for(let x = 0; x < cells.length; x++) {
             for (let y = 0; y < cells[x].length; y++) {
-                cells[x][y].mobile = (cells[x][y].bonds.length==0);
+                cells[x][y].reset_mobile();
             }
         }
     }
@@ -113,14 +97,23 @@ export default class SCL extends DynamicalSystem {
         if (!p.mobile || !np.mobile || p.type==np.type) {
             return
         }
-            let prob = Math.sqrt(mobility_factors[p.type] * mobility_factors[np.type]);
-            if (utils.eval_prob(prob)) {
-                cells[x][y] = np;
-                cells[nx][ny] = p;
-                cells[x][y].mobile = false;
-                cells[nx][ny].mobile = false;
-            }
+        let prob = Math.sqrt(mobility_factors[p.type] * mobility_factors[np.type]);
+        if (utils.eval_prob(prob)) {
+            SCL.swap_cell(cells, x, y, nx, ny);
+            cells[x][y].mobile = false;
+            cells[nx][ny].mobile = false;
         }
+    }
+    
+    static swap_cell(cells, x0, y0, x1, y1) {
+        let tmp = cells[x0][y0];
+        cells[x0][y0] = cells[x1][y1];
+        cells[x1][y1] = tmp;
+        cells[x0][y0].x = x0;
+        cells[x0][y0].y = y0;
+        cells[x1][y1].x = x1;
+        cells[x1][y1].y = y1;
+    }
 
     static production(cells, x, y, prob) {
         let p = cells[x][y];
@@ -132,13 +125,21 @@ export default class SCL extends DynamicalSystem {
             return
         }
         if (utils.eval_prob(prob)) {
-            np1.type = 'H';
-            np2.type = 'L'
+            np1.set_type('H');
+            np2.set_type('L');
         }
     }
 
     static disintegration(cells, x, y) {}
-    static bonding(cells, x, y) {}
+
+    static bonding(cells, x, y) {
+        let p = cells[x][y];
+        let [np, nx, ny] = utils.get_rand_moore_neighborhood(cells, x, y);
+        if ( ['L', 'LS'].indexOf(p.type) == -1 || ['L', 'LS'].indexOf(np.type) == -1) {
+            return
+        }
+    }
+
     static bond_decay(cells, x, y) {}
 
     static absorption(cells, x, y, prob) {
@@ -148,8 +149,8 @@ export default class SCL extends DynamicalSystem {
             return
         }
         if (utils.eval_prob(prob)) {
-            p.type = 'LS';
-            np.type = 'H';
+            p.set_type('LS');
+            np.set_type('H');
         }
     }
 
@@ -160,8 +161,8 @@ export default class SCL extends DynamicalSystem {
             return
         }
         if (utils.eval_prob(prob)) {
-            p.type = 'L';
-            np.type = 'S'
+            p.set_type('L');
+            np.set_type('S');
         }
     }
 }
