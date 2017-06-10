@@ -25,7 +25,7 @@ export default class Cell {
     }
     
     add_bond(cell, recurcive=true) {
-        if (this.bonds.length >= Cell.MAX_BOND_NUM) {
+        if (this.is_max_bonding()) {
             throw new TypeError("Bonding is more than max size.");
         }
         if (cell.type != 'L') {
@@ -38,7 +38,11 @@ export default class Cell {
         }
     }
     
+    is_max_bonding() {
+        return (this.bonds.length >= Cell.MAX_BOND_NUM);
+    }
+    
     get_bonds_pos() {
-        return this.bonds.map((c)=>{return [c.x, c.y]});
+        return this.bonds.map((c)=>{return {x:c.x, y:c.y}});
     }
 }

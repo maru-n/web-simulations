@@ -36,9 +36,9 @@ export default class SCLVisualizer extends DynamicalSystemCanvasVisualizer {
             for (let y = 0; y < scl.y_size; y++) {
                 let p = scl.cells[x][y];
                 this.draw_cell(ctx, p.type, x, y);
-                for (let b of p.get_bonds_pos()) {
-                    if (x < b[0] || y < b[1]) {
-                        this.draw_bond(ctx, x, y, b[0], b[1]);
+                for (let bp of p.get_bonds_pos()) {
+                    if (x < bp.x || y < bp.y) {
+                        this.draw_bond(ctx, x, y, bp.x, bp.y);
                     }
                 }
             }
