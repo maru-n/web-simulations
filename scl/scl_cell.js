@@ -83,6 +83,10 @@ export default class Cell {
         return false
     }
     
+    get_bonds() {
+        return this._bonds
+    }
+    
     get_bonds_pos() {
         return this._bonds.map((c)=>{return {x:c.x, y:c.y}});
     }
