@@ -11,8 +11,8 @@ cp -f ${PROJECT_DIR}/index.html ${DIST_DIR}
 
 # legacy projects
 cd ${PROJECT_DIR}/legacy
-#./node_modules/.bin/gulp build-release:all
-gulp build-release:all
+npm install
+./node_modules/.bin/gulp build-release:all
 cp -fr ${PROJECT_DIR}/legacy/dist/double_pendulum ${DIST_DIR}/double_pendulum
 cp -fr ${PROJECT_DIR}/legacy/dist/scl ${DIST_DIR}/scl
 
