@@ -62,8 +62,7 @@ export default class SCL extends DynamicalSystem {
         this.chain_initiate_prob = 0.1;
         this.chain_extend_prob = 0.6;
         this.chain_splice_prob = 0.9;
-        
-        //this.bond_decay_prob = 0.1;
+        this.bond_decay_prob = 0.0005;
         this.absorption_prob = 0.5;
         this.emission_prob = 0.5;
     }
@@ -88,7 +87,7 @@ export default class SCL extends DynamicalSystem {
                 this.production(x, y);
                 this.disintegration(x, y);
                 this.bonding(x, y);
-                //SCL.bond_decay(this.cells, x, y);
+                this.bond_decay(x, y);
                 this.absorption(x, y);
                 this.emission(x, y);
             }
@@ -231,7 +230,14 @@ export default class SCL extends DynamicalSystem {
         }
     }
 
-    static bond_decay(cells, x, y) {}
+    bond_decay(x, y) {
+        let p = this.cells[x][y];
+        for (let bp of p.get_bonds()) {
+            if (utils.eval_prob(this.bond_decay_prob)) {
+                p.remove_bond(bp);
+            }
+        }
+    }
 
     absorption(x, y) {
         let nxy = utils.get_rand_moore_neighborhood(x, y, this.x_size, this.y_size);
