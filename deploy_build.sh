@@ -11,11 +11,11 @@ cp -f ${PROJECT_DIR}/index.html ${DIST_DIR}
 
 # legacy projects
 cd ${PROJECT_DIR}/legacy
-gulp build-release:all
+./node_modules/.bin/gulp build-release:all
 cp -fr ${PROJECT_DIR}/legacy/dist/double_pendulum ${DIST_DIR}/double_pendulum
 cp -fr ${PROJECT_DIR}/legacy/dist/scl ${DIST_DIR}/scl
 
-for TARGET in GrayScott MovingSpot
+for TARGET in GrayScott MovingSpots
 do
     cd ${PROJECT_DIR}/${TARGET}
     target_url=`echo ${TARGET} | sed -r -e 's/^([A-Z])/\L\1\E/' -e 's/([A-Z])/_\L\1\E/g'`
