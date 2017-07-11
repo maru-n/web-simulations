@@ -152,14 +152,6 @@ Visualizer.propTypes = {
     display_scale: PropTypes.string,
     sim_name: PropTypes.string.isRequired,
     draw_func: PropTypes.func.isRequired,
-    /*
-    display_width: PropTypes.oneOfType([
-        PropTypes.number,
-        PropTypes.string]),
-    display_height: PropTypes.oneOfType([
-        PropTypes.number,
-        PropTypes.string]),
-        */
 };
 Visualizer.defaultProps = {
     display_scale: 'auto',
