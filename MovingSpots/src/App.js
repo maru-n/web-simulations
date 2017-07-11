@@ -142,8 +142,7 @@ let draw_func = function(canvas, sim) {
 
 export default (
     <SimVisApp style={{width:600, margin:'auto'}}>
-        <Visualizer width={WIDTH} height={WIDTH}
-            display_width={600} display_height={600}
+        <Visualizer width={WIDTH} height={HEIGHT}
             sim_name={'my_sim'}
             draw_func={draw_func} />
         <div>

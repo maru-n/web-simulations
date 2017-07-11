@@ -1,0 +1,15 @@
+@media (max-width: 600px) {
+    .SimVisApp {
+        width: 100% !important;
+    }
+}
+
+.Visualizer {
+    border: 1px solid black;
+    position: relative;
+    top: -1px;
+    left: -1px;
+}
+.Visualizer canvas {
+    display: block;
+}

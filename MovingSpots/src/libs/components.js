@@ -1,3 +1,4 @@
+import './components.css'
 import React, {Component} from 'react';
 import PropTypes from 'prop-types'
 import SimVisJs from './SimVisJs.js'
@@ -22,7 +23,7 @@ injectTapEventPlugin();
 export class SimVisApp extends Component {
     render() {
         return (
-            <MuiThemeProvider><div style={this.props.style}>{this.props.children}</div></MuiThemeProvider>
+            <MuiThemeProvider><div className={'SimVisApp'} style={this.props.style}>{this.props.children}</div></MuiThemeProvider>
         )
     }
 }
@@ -32,14 +33,12 @@ export class SimVisApp extends Component {
  * canvas component to visualize simulation
  */
 export class Visualizer extends Component {
-    wrapper_style = {
-        border: '1px solid black',
-        position: 'relative',
-        top: '-1px',
-        left: '-1px',
-    }
     constructor(props) {
         super(props)
+        this.state = {
+            canvas_width: '100%',
+            canvas_height: '100%',
+        }
         this.handleClick = this.handleClick.bind(this)
         this.handleDbClick = this.handleDbClick.bind(this)
         this.handleMouseMove = this.handleMouseMove.bind(this)
@@ -49,6 +48,45 @@ export class Visualizer extends Component {
         let l = this.props.draw_func.bind(null, canvas)
         l(SimVisJs.get_sim(this.props.sim_name))
         SimVisJs.addUpdateListener(this.props.sim_name, l)
+        this.setCanvasSize()
+        canvas.addEventListener('fullscreenchange', this.handleFullscreenChange.bind(this));
+        canvas.addEventListener('mozfullscreenchange', this.handleFullscreenChange.bind(this));
+        canvas.addEventListener('webkitfullscreenchange', this.handleFullscreenChange.bind(this));
+    }
+    componentWillUnmount() {
+        const {canvas} = this.refs;
+        canvas.removeEventListener('fullscreenchange', this.handleFullscreenChange);
+        canvas.removeEventListener('mozfullscreenchange', this.handleFullscreenChange);
+        canvas.removeEventListener('webkitfullscreenchange', this.handleFullscreenChange);
+    }
+    setCanvasSize() {
+        const is_fullscreen = (
+            (document.webkitFullscreenElement && document.webkitFullscreenElement !== null) ||
+            (document.mozFullScreenElement && document.mozFullScreenElement !== null) ||
+            (document.msFullscreenElement && document.msFullscreenElement !== null) ||
+            (document.fullScreenElement && document.fullScreenElement !== null) )
+        
+        if (is_fullscreen) {
+            const canvas_asp = this.props.width / this.props.height
+            const screen_asp = window.screen.width / window.screen.height
+            if (canvas_asp > screen_asp) {
+                this.setState({
+                    canvas_height: 'auto',
+                })
+            } else {
+                this.setState({
+                    canvas_width: 'auto',
+                })
+            }
+        } else {
+            this.setState({
+                canvas_width: '100%',
+                canvas_height: '100%',
+            })
+        }
+    }
+    handleFullscreenChange(e) {
+        this.setCanvasSize()
     }
     handleDbClick() {
         const elm = this.refs.canvas
@@ -79,34 +117,26 @@ export class Visualizer extends Component {
         }
     }
     render() {
-        this.wrapper_style.width =
-            this.props.display_width ? this.props.display_width : this.props.width
-        this.wrapper_style.height =
-            this.props.display_height ? this.props.display_height : this.props.height
-            
-        let canvas_style
-        const canvas_asp = this.props.width / this.props.height
-        const screen_asp = window.screen.width / window.screen.height
-        if (canvas_asp > screen_asp) {
-            canvas_style = {
-                position: 'absolute',
-                width: '100%',
-            }
-        } else {
-            canvas_style = {
-                position: 'absolute',
-                height: '100%',
-            }
+        let wrapper_style = {}
+        if (this.props.display_scale === 'auto') {
+            wrapper_style.width = '100%'
+            wrapper_style.height = 'auto'
+        } else if (this.props.display_scale === 'fix') {
+            wrapper_style.width = this.props.width
+            wrapper_style.height = this.props.height
         }
         return (
-            <div style={this.wrapper_style}>
+            <div className={'Visualizer'} style={wrapper_style}>
                     <canvas ref="canvas"
                         width={this.props.width}
                         height={this.props.height}
                         onDoubleClick={this.props.switch_fullscreen ? this.handleDbClick : null}
                         onClick = {this.handleClick}
                         onMouseMove = {this.handleMouseMove}
-                        style={canvas_style}/>
+                        style = {{
+                            width:this.state.canvas_width,
+                            height:this.state.canvas_height,
+                        }}/>
             </div>
         )
     }
@@ -119,15 +149,21 @@ Visualizer.propTypes = {
     height: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string]).isRequired,
+    display_scale: PropTypes.string,
     sim_name: PropTypes.string.isRequired,
     draw_func: PropTypes.func.isRequired,
+    /*
     display_width: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string]),
     display_height: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string]),
+        */
 };
+Visualizer.defaultProps = {
+    display_scale: 'auto',
+}
 
 
 /*
@@ -232,7 +268,7 @@ export class ParameterSlider extends React.Component {
     };
     
     render() {
-        this.style.width = 400
+        this.style.width = '100%'
         return (
             <div style={this.style}>
                 <div>{this.props.label} : {this.state.value}</div>
@@ -242,7 +278,7 @@ export class ParameterSlider extends React.Component {
                     step={this.props.step}
                     value={this.state.value}
                     onChange={this.handleSlider}
-                    style={{width: 400, position:'relative'}}
+                    style={{width: '100%', position:'relative'}}
                     sliderStyle={{margin:0}}
                     />
                 <div style={{clear:'both'}} />
