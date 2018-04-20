@@ -11,7 +11,7 @@ const composer = require('gulp-uglify/composer');
 var minify = composer(uglifyes, console);
 
 
-const targets = ['example', 'double_pendulum', 'scl']
+const targets = ['example', 'scl']
 const DIST_DIR = './dist/';
 
 gulp.task('default', ['build:all']);
